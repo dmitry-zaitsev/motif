@@ -16,7 +16,6 @@
 package com.google.testing.compile;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSetMultimap;
 import dagger.internal.codegen.ComponentProcessor;
 import motif.compiler.buck.ClassUsageFileManager;
 
@@ -109,9 +108,9 @@ public class MotifTestCompiler {
         }
     }
 
-    // TODO Remove Test2 check
+    // TODO Do not filter out Test.java
     private static List<JavaFileObject> javaFileObjects(File... dirs) {
-        return Stream.of(dirs)
+        List<File> files = Stream.of(dirs)
                 .filter(File::exists)
                 .flatMap(file -> {
                     try {
@@ -121,7 +120,11 @@ public class MotifTestCompiler {
                     }
                 })
                 .map(Path::toFile)
-                .filter(file -> !file.isDirectory() && file.getName().endsWith(".java") && !file.getName().endsWith("ScopeImpl.java") && !file.getName().equals("Test2.java"))
+                .filter(file -> !file.isDirectory() && file.getName().endsWith(".java") && !file.getName().endsWith("ScopeImpl.java"))
+                .collect(Collectors.toList());
+        boolean hasTest2 = files.stream().anyMatch(file -> file.getName().equals("Test2.java"));
+        return files.stream()
+                .filter(file -> !hasTest2 || !file.getName().equals("Test.java"))
                 .map(file -> {
                     try {
                         return JavaFileObjects.forResource(file.toURI().toURL());

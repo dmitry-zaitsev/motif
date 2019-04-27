@@ -1,0 +1,11 @@
+Implement and write tests for the following:
+
+* Ignore private methods in Objects class
+* Included spread dependencies in dependency cycle check
+* Dynamic dependency that already provided by child. Currently ignores parameter.
+* Dynamic dependency already exposed by parent. Parameter currently overrides exposed instance.
+* Throw compilation error for unused dependencies
+* Duplicate factory combinations
+
+* Consider factoring out BaseTest logic into module to be shared between core2 and models test sources.
+* Do Spreadable types need to be public?
